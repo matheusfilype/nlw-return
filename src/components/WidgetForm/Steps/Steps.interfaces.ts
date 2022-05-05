@@ -7,4 +7,9 @@ export type FeedbackTypeStepProps = {
 export type FeedbackContentStepProps = {
   feedbackType: FeedbackType;
   onFeedbackRestartRequested: () => void;
+  onFeedbackSent: () => void;
+};
+
+export type FeedbackSuccessStepProps = {
+  onFeedbackRestartRequested: () => void;
 };

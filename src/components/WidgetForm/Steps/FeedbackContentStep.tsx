@@ -1,5 +1,5 @@
-import { ArrowLeft, Camera } from "phosphor-react";
-import { useState } from "react";
+import { ArrowLeft } from "phosphor-react";
+import { FormEvent, useState } from "react";
 import { feedbackTypes } from "../../../constants";
 import { CloseButton, ScreenshotButton } from "../../Buttons";
 import { FeedbackContentStepProps } from "./Steps.interfaces";
@@ -7,10 +7,21 @@ import { FeedbackContentStepProps } from "./Steps.interfaces";
 export function FeedbackContentStep({
   feedbackType,
   onFeedbackRestartRequested,
+  onFeedbackSent,
 }: FeedbackContentStepProps) {
   const [screenshot, setScreenshot] = useState<string | null>(null);
 
+  const [comment, setComment] = useState("");
+
   const feedBackTypeInfo = feedbackTypes[feedbackType];
+
+  function handleSubmitFeedback(e: FormEvent) {
+    e.preventDefault();
+
+    // Request
+
+    onFeedbackSent();
+  }
 
   return (
     <>
@@ -35,8 +46,9 @@ export function FeedbackContentStep({
         <CloseButton />
       </header>
 
-      <form className="my-4 w-full">
+      <form className="my-4 w-full" onSubmit={handleSubmitFeedback}>
         <textarea
+          onChange={(event) => setComment(event.target.value)}
           className="min-w-[304px] w-full min-h-[112px] text-sm placeholder-zinc-400 text-zinc-400 p-2 border-zinc-600 bg-transparent rounded-md resize-none focus:outline-none focus:border-brand-500 focus:ring-brand-500 focus:ring-1 scrollbar scrollbar-thumb-zinc-700 scrollbar-track-transparent scrollbar-thin"
           placeholder="Conte com detalhes o que está acontecendo..."
         />
@@ -48,7 +60,8 @@ export function FeedbackContentStep({
           />
           <button
             type="submit"
-            className="p-2 bg-brand-500 rounded-md border-transparent flex-1 flex justify-center items-center text-sm hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-brand-500 transition-colors"
+            className="p-2 bg-brand-500 rounded-md border-transparent flex-1 flex justify-center items-center text-sm hover:bg-brand-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-zinc-900 focus:ring-brand-500 transition-colors disabled:opacity-50 disabled:hover:bg-brand-500 disabled:cursor-not-allowed"
+            disabled={comment.trim().length <= 0}
           >
             Enviar feedback
           </button>

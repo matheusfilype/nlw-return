@@ -2,12 +2,14 @@ import { useState } from "react";
 
 import { FeedbackType } from "../../interfaces/Feedback";
 import { FeedbackContentStep } from "./Steps/FeedbackContentStep";
-import { FeedbackTypeStep } from "./Steps";
+import { FeedbackSuccessStep, FeedbackTypeStep } from "./Steps";
 
 export function WidgetForm() {
   const [feedbackType, setFeedbackType] = useState<null | FeedbackType>(null);
+  const [feedbackSent, setFeedbackSent] = useState(false);
 
   function handleRestartFeed() {
+    setFeedbackSent(false);
     setFeedbackType(null);
   }
 
@@ -26,13 +28,20 @@ export function WidgetForm() {
     md:w-auto
     "
     >
-      {!feedbackType ? (
-        <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
+      {feedbackSent ? (
+        <FeedbackSuccessStep onFeedbackRestartRequested={handleRestartFeed} />
       ) : (
-        <FeedbackContentStep
-          feedbackType={feedbackType}
-          onFeedbackRestartRequested={handleRestartFeed}
-        />
+        <>
+          {!feedbackType ? (
+            <FeedbackTypeStep onFeedbackTypeChanged={setFeedbackType} />
+          ) : (
+            <FeedbackContentStep
+              feedbackType={feedbackType}
+              onFeedbackRestartRequested={handleRestartFeed}
+              onFeedbackSent={() => setFeedbackSent(true)}
+            />
+          )}
+        </>
       )}
 
       <footer className="text-xs text-neutral-600">
